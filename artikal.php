@@ -31,9 +31,13 @@
                 <div class="col-md-6 offset-md-3 mt-5">
                     <h1 style="text-align: center;" class="mt-5">Dodaj Artikal</h1>
                     <form method="POST" enctype="multipart/form-data" action="dodajartikal.php">
-                        <div class="form-group">
+                        <div class="form-group ">
                             <label for="ime_artikla">Ime Artikla:</label>
                             <input type="text" class="form-control mt-3" id="ime_artikla" name="ime_artikla" required autocomplete="off">
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="zalihe">Zalihe:</label>
+                            <input type="number" class="form-control mt-3" id="zalihe" name="zalihe" required autocomplete="off">
                         </div>
                         <button class="btn btn-primary mt-3 w-100" name="dodaj" id="dodaj">DODAJ</button>
                     </form>

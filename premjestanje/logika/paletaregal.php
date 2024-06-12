@@ -77,10 +77,10 @@ if (isset($_POST['spremi'])) {
             $id_art = 0;
             
             $niz_string = implode(",", $niz);  
-            $sql3 = "INSERT INTO historija (id_artikla, korisnik, akcija, vrijeme) VALUES (?, ?, ?, NOW())";
+            $sql3 = "INSERT INTO historija (korisnik, akcija, vrijeme) VALUES (?, ?, NOW())";
             $stmt3 = $mysqli->prepare($sql3);
             $akcija = "$ime_korisnika premjestio paletu $idPalete sa artiklima $niz_string u regal: $idRegala.";
-            $stmt3->bind_param("iss", $id_art, $ime_korisnika, $akcija);
+            $stmt3->bind_param("iss", $ime_korisnika, $akcija);
             $stmt3->execute();
 
             header("Location: ../paletaregal.php?message=Uspješno+sačuvani+artikli+u+regal+$idRegala");

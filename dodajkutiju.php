@@ -26,7 +26,7 @@ if (isset($_POST['dodaj']) && isset($_POST['broj'])) {
             $ime = $row['ime'];
             $korisnicko_ime = $row['korisnicko_ime'];
         }
-        $sql_2 = "INSERT INTO historija (korisnik, id_artikla, akcija, vrijeme) VAlUES ('$ime','$last_id', '$ime je dodao kutiju sa ID: $code', NOW())";
+        $sql_2 = "INSERT INTO historija (korisnik, akcija, vrijeme) VAlUES ('$ime', '$ime je dodao kutiju sa ID: $code', NOW())";
         if ($mysqli->query($sql_2) === TRUE) {
             
         } else {

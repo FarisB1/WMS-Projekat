@@ -22,9 +22,19 @@
                 <div class="col-md-6 offset-md-3 mt-5">
                     <h1 style="text-align: center;"class="mt-5">Izvještaj kutija</h1>
                     <form method="POST" action="izvjestaj_logika.php" class="mt-3">
-                        <div class="form-group">
-                            <label for="inputNumber">Unesite ID kutije:</label>
-                            <input type="number" id="inputNumber" name="inputNumber" class="form-control" required>
+                       <div class="form-group mt-3">
+                            <label for="kutija">Kutija:</label>
+                            <select class="form-control" id="inputNumber" name="inputNumber" style="padding:6px 12px;" required>
+                                <option value="">Odaberite opciju</option>
+                                <?php 
+                                    include 'conn.php';
+                                    $sql = "SELECT id, kolicina, kapacitet FROM kutije";
+                                    $result = $mysqli->query($sql);
+                                    while ($row = $result->fetch_assoc()) {
+                                        echo "<option value='" . $row['id'] . "'>ID: " . $row['id'] . "</option>";
+                                    }
+                                ?>
+                            </select>
                         </div>
                         <?php  
                             if (isset($_GET['message'])) {

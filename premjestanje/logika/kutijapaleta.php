@@ -26,7 +26,7 @@ if (isset($_POST['spremi'])) {
         $kapacitetPalete = $row['kapacitet'];
 
         if ($kolicinaPalete >= $kapacitetPalete) {
-            header("Location: ../kutijapaleta.php?message=Kutija+je+puna");
+            header("Location: ../kutijapaleta.php?message=Paleta+je+puna");
             exit();
         }
 
@@ -36,6 +36,7 @@ if (isset($_POST['spremi'])) {
         $stmt_kutije->execute();
         $result_kutije = $stmt_kutije->get_result();
         $row_kutije = $result_kutije->fetch_assoc();
+
 
         $sql_artikli = "SELECT * FROM premjestanje WHERE id_kutije = ?";
         $stmt_artikli = $mysqli->prepare($sql_artikli);
@@ -61,7 +62,6 @@ if (isset($_POST['spremi'])) {
             $hala = 0;
         }
 
-        if ($result_artikli->num_rows > 0) {
             $sql_update = "UPDATE premjestanje SET id_palete = ?, id_regala = ?, id_hale = ? WHERE id_kutije = ?";
             $stmt_update = $mysqli->prepare($sql_update);
             $stmt_update->bind_param("iiii", $idPalete,$regal,$hala, $idKutije);
@@ -100,10 +100,10 @@ if (isset($_POST['spremi'])) {
                         $row_artikal = $result_artikal->fetch_assoc();
                         $ime_artikla = $row_artikal['ime_artikla'];
 
-                        $sql3 = "INSERT INTO historija (id_artikla, korisnik, akcija, vrijeme) VALUES (?, ?, ?, NOW())";
+                        $sql3 = "INSERT INTO historija ( korisnik, akcija, vrijeme) VALUES ( ?, ?, NOW())";
                         $stmt3 = $mysqli->prepare($sql3);
                         $akcija = "$ime_korisnika premjestio artikal $ime_artikla u paletu: $idPalete.";
-                        $stmt3->bind_param("iss", $id_artikla, $ime_korisnika, $akcija);
+                        $stmt3->bind_param("iss", $ime_korisnika, $akcija);
                         $stmt3->execute();
 
                     }
@@ -114,9 +114,7 @@ if (isset($_POST['spremi'])) {
                 }
             } else {
             }
-        } else {
-            header("Location: ../kutijapaleta.php?message=Kutija+ne+postoji+ili+nema+artikala+za+premještanje");
-        }
+        
     } else {
         header("Location: ../kutijapaleta.php?message=Nema+palete+sa+tim+ID");
     }

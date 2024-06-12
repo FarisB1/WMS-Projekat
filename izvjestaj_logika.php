@@ -2,11 +2,16 @@
 session_start();
 include 'conn.php';
 
-
 if (isset($_POST['submit'])) {
     $inputNumber = $_POST['inputNumber'];
-    $sql2 = "SELECT * FROM premjestanje WHERE id_kutije = '$inputNumber'";
-    $result2 = $mysqli->query($sql2);
+
+    // Prepare and execute the first query to get the articles in the box
+    $sql2 = "SELECT * FROM premjestanje WHERE id_kutije = ?";
+    $stmt2 = $mysqli->prepare($sql2);
+    $stmt2->bind_param("i", $inputNumber);
+    $stmt2->execute();
+    $result2 = $stmt2->get_result();
+
     if ($result2->num_rows > 0) {
         echo "<div class='d-flex'>";
         include 'sidebar.php';
@@ -17,29 +22,49 @@ if (isset($_POST['submit'])) {
         echo "<div class='container'>";
         echo "<h2 style='text-align: center;'>Artikli u kutiji " . $inputNumber . ":</h2>";
         echo "<table class='table table-striped'>";
-        echo "<tr><th style='font-size:22px'>ID dijela</th> <th style='font-size:22px'>Ime Artikla</th></tr>";
-        $suma = 0;
+        echo "<tr><th style='font-size:22px'>Ime Artikla</th> <th style='font-size:22px'>Zalihe</th></tr>";
+        
+        $products = [];
+        
         while ($row2 = $result2->fetch_assoc()) {
             $ime_sql = $row2["id_produkta"];
-            $sql3 = "SELECT * FROM artikli WHERE id = '$ime_sql'";
-            $result3 = $mysqli->query($sql3);
+            
+            // Prepare and execute the second query to get the article name
+            $sql3 = "SELECT * FROM artikli WHERE id = ?";
+            $stmt3 = $mysqli->prepare($sql3);
+            $stmt3->bind_param("i", $ime_sql);
+            $stmt3->execute();
+            $result3 = $stmt3->get_result();
             $row3 = $result3->fetch_assoc();
             $ime = $row3["ime_artikla"];
-            $suma=$suma+1;
-            echo "<tr>";
-            echo "<td style='font-size: 20px'>" . $row2['id'] . "</td>";
-            echo "<td style='font-size: 20px'>". $ime ."</td>";
-            echo "</tr>";
+            $zalihe = $row2["kolicina"];
+
+            if (isset($products[$ime])) {
+                $products[$ime] += $zalihe;
+            } else {
+                $products[$ime] = $zalihe;
+            }
         }
+
+        $suma = 0;
+        $suma_zaliha = 0;
+        foreach ($products as $ime => $zalihe) {
+            echo "<tr>";
+            echo "<td style='font-size: 20px'>" . $ime . "</td>";
+            echo "<td style='font-size: 20px'>" . $zalihe . "</td>";
+            echo "</tr>";
+            $suma++;
+            $suma_zaliha += $zalihe;
+        }
+        
         echo "</table><br>";
-        echo "<h2 style='text-align: center;'>Ukupno artikala u kutiji " . $inputNumber . " je: " . $suma . "</h2>";
+        echo "<h3 style='text-align: left;'>Artikala u kutiji " . $inputNumber . ": " . $suma . "<br><br>Zalihe: " . $suma_zaliha . "</h3>";
         echo "<div style='display: flex; justify-content: center; '><a href='izvjestaj.php' class='btn btn-primary'>Nazad</a></div>";
         echo "</div></div></div></div></div>";
     } else {
         header("Location: izvjestaj.php?message=Kutija+je+prazna.");
     }
-    } else {
-        header("Location: izvjestaj.php?message=Nema+kutije+sa+tim+ID");
-    }
-
+} else {
+    header("Location: izvjestaj.php?message=Nema+kutije+sa+tim+ID");
+}
 ?>

@@ -15,9 +15,23 @@
                 <div class="col-md-6 offset-md-4 mt-5">
                     <h1 style="text-align: center;"class="mt-5">Artikal - Paleta</h1>
                     <form method="POST" enctype="multipart/form-data" action="logika/kutijapaleta.php">
-                        <div class="form-group">
-                            <label for="idKutije">ID kutije:</label>
-                            <input type="text" class="form-control" id="idKutije" name="idKutije" placeholder="Unesite ID dijela" style="padding:6px 12px;">
+                        <div class="form-group mt-3">
+                            <label for="kutija">Kutija:</label>
+                            <select class="form-control" id="kutija" name="kutija" style="padding:6px 12px;" required>
+                                <option value="">Odaberite opciju</option>
+                                <?php 
+                                    include '../conn.php';
+                                    $sql = "SELECT id, kolicina, kapacitet FROM kutije";
+                                    $result = $mysqli->query($sql);
+                                    while ($row = $result->fetch_assoc()) {
+                                        $kolicinaKutije = $row['kolicina'];
+                                        $kapacitetKutije = $row['kapacitet'];
+                                        if ($kolicinaKutije < $kapacitetKutije) {
+                                            echo "<option value='" . $row['id'] . "'>ID: " . $row['id'] . " (" . intval($kapacitetKutije - $kolicinaKutije) . ")</option>";
+                                        }
+                                    }
+                                ?>
+                            </select>
                         </div>
                         <div class="form-group mt-3">
                             <label for="paleta">Paleta:</label>

@@ -5,6 +5,7 @@ $korisnik = $_SESSION['user_id'];
 if (isset($_POST['spremi'])) {
     $id_artikla = $_POST['idDijela'];
     $kutija = $_POST['kutija'];
+    $zalihe = $_POST['zaliheInput'];
 
     $sql_kolicina = "SELECT * FROM artikli WHERE id = '$id_artikla'";
     $result_kolicina = $mysqli->query($sql_kolicina);
@@ -75,28 +76,23 @@ if (isset($_POST['spremi'])) {
         $stara_hala = intval($row_kut['id_hale']);
         $stara_regal = intval($row_kut['id_regala']);
 
-        $sql = "INSERT INTO premjestanje (id_produkta, id_kutije, id_palete, id_regala, id_hale, vrijeme) 
-        VALUES ('$id_artikla', '$kutija', '$paleta', '$regal', '$hala', NOW()) ON DUPLICATE KEY UPDATE 
-        id_kutije = $kutija, 
-        id_palete = $stara_paleta, 
-        id_regala = $stara_regal, 
-        id_hale = $stara_hala,
-        vrijeme = NOW()";
+        $sql = "INSERT INTO premjestanje (id_produkta, id_kutije, id_palete, id_regala, id_hale, kolicina,vrijeme) 
+        VALUES ('$id_artikla', '$kutija', '$paleta', '$regal', '$hala', '$zalihe' ,NOW())";
 
         if ($mysqli->query($sql) === TRUE) {
             if ($mysqli->affected_rows > 0) {
-                $sql2 = "UPDATE kutije SET kolicina = kolicina + 1 WHERE id = $kutija";
+                $sql2 = "UPDATE kutije SET kolicina = kolicina + $zalihe WHERE id = $kutija";
                 $mysqli->query($sql2);
                 
-                $sql4 = "UPDATE kutije SET kolicina = kolicina - 1 WHERE id = $stara_kutija";
-                $mysqli->query($sql4);
-
+                $sql5= "UPDATE artikli SET zalihe = zalihe - $zalihe WHERE id = $id_artikla";
+                $mysqli->query($sql5);
+                
                 $sql_korisnik = "SELECT * FROM korisnici WHERE id = $korisnik";
                 $result_korisnik = $mysqli->query($sql_korisnik);
                 $row_korisnik = $result_korisnik->fetch_assoc();
                 $ime_korisnika = $row_korisnik['ime'];
 
-                $sql3 = "INSERT INTO historija (id_artikla, korisnik, akcija, vrijeme) VALUES ($id_artikla, '$ime_korisnika', '$ime_korisnika premjestio artikal $ime_artikla u kutiju: $kutija.', NOW())";
+                $sql3 = "INSERT INTO historija (korisnik, akcija, vrijeme) VALUES ('$ime_korisnika', '$ime_korisnika premjestio artikal $ime_artikla u kutiju: $kutija.', NOW())";
                 $mysqli->query($sql3);
 
                 

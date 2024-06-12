@@ -7,7 +7,7 @@ if(!isset($_SESSION['user_id'])){
 }
 
 include 'conn.php';
-$sql = "SELECT COUNT(*) FROM artikli";
+$sql = "SELECT SUM(zalihe) FROM artikli";
 $result = $mysqli->query($sql);
 $row = $result->fetch_row();
 $ukupan_br = $row[0];
@@ -69,13 +69,7 @@ $ukupan_br_regala = $row_6[0];
                 </div>
                 <div class="page-header-right ms-auto">
                     <div class="page-header-right-items">
-                        <div class="d-flex d-md-none">
-                            <a href="javascript:void(0)" class="page-header-right-close-toggle">
-                                <i class="feather-arrow-left me-2"></i>
-                                <span>Back</span>
-                            </a>
-                        </div>
-                        
+                    
                     </div>
                     <div class="d-md-none d-flex align-items-center">
                         <a href="javascript:void(0)" class="page-header-right-open-toggle">
@@ -97,7 +91,7 @@ $ukupan_br_regala = $row_6[0];
                                         <h5 class="mb-1">Izvještaj Artikala</h5>
                                         <span class="fs-12 text-muted">Broj artikala</span>
                                     </div>
-                                    <a href="izvjestaj_artikli.php" class="btn btn-light-brand">Pogledaj sve</a>
+                                    <a href="artikal.php" class="btn btn-primary">Dodaj Artikal</a>
                                 </div>
                                 <div class="row">
                                     <div class="col-xxl-2 col-lg-4 col-md-6">
@@ -188,7 +182,7 @@ $ukupan_br_regala = $row_6[0];
                     <!-- [Najpopularniji artikli] end -->
                     <?php
 
-                        $sql = "SELECT id, id_produkta, id_korisnika, lokacija, vrijeme FROM narudzbe ORDER BY id DESC LIMIT 5";
+                        $sql = "SELECT id, id_produkta, id_korisnika, lokacija, kolicina, vrijeme FROM narudzbe ORDER BY id DESC LIMIT 5";
                         $result = $mysqli->query($sql);
 
                         if ($result->num_rows > 0) {

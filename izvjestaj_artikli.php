@@ -49,24 +49,29 @@ $result = mysqli_query($mysqli, $sql);
                             <tr>
                                 <th>ID</th>
                                 <th>Ime artikla</th>
-                                <th>ID kutije</th>
+                                <th>Zalihe</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php
+                        <?php
                             while ($row = $result->fetch_assoc()) {
                                 $kutija_id = "Nije u kutiji";
                                 
-                                $sql_kutija = "SELECT * FROM premjestanje WHERE id_produkta = {$row['id']}";
+                                // Fetching the article details
+                                $sql_kutija = "SELECT * FROM artikli WHERE id = {$row['id']}";
                                 $result_kutija = mysqli_query($mysqli, $sql_kutija);
                                 $kutija = $result_kutija->fetch_assoc();
-                                if (isset($kutija["id_kutije"])) {
-                                    $kutija_id = $kutija["id_kutije"];
-                                }
+                                $zal = $kutija['zalihe']; 
+                                // Fetching the sum of zalihe
+                                $sql_sum = "SELECT SUM(kolicina) as total_zalihe FROM premjestanje WHERE id_produkta = {$row['id']}";
+                                $result_sum = mysqli_query($mysqli, $sql_sum);
+                                $rez = $result_sum->fetch_assoc()['total_zalihe'];
+                                $rez = $rez + $zal;
+
                                 echo "<tr>";
                                 echo "<td style='vertical-align: middle;'><b>{$row['id']}</b></td>";
                                 echo "<td style='vertical-align: middle;'><b>{$row['ime_artikla']}</b></td>";
-                                echo "<td style='vertical-align: middle;'><b>{$kutija_id}</b></td>";
+                                echo "<td style='vertical-align: middle;'><b>{$rez}</b></td>";
                                 echo "</tr>";
                             }
                             ?>

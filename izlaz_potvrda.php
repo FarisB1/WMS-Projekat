@@ -2,6 +2,7 @@
 session_start();
 include "conn.php";
 $id_dijela=$_POST['idDijela'];
+$kolicina = $_POST['zaliheInput'];
 
 $sql_kolicina = "SELECT * FROM artikli WHERE id = '$id_dijela'";
 $result_kolicina = $mysqli->query($sql_kolicina);
@@ -32,6 +33,10 @@ if ($result_kolicina->num_rows > 0) {
                             <label for="idDijela">ID dijela:</label>
                             <input type="text" class="form-control" id="idDijela" name="idDijela" value="<?php echo $id_dijela;?>" placeholder="Unesite ID dijela" style="padding:6px 12px;">
                         </div>
+                            <div class="form-group mt-3">
+                                <label for="lokacija">Kolicina:</label>
+                                <input type="number" class="form-control" value="<?php echo $kolicina;?>" id="kolicina" name="kolicina" placeholder="Unesite ID lokaciju" style="padding:6px 12px;">
+                            </div>
                         <div class="form-group">
                             <label for="trazio">Ko je tražio artikal:</label>
                             <select class="form-control" id="trazio" name="trazio" style="padding:6px 12px;">
@@ -50,7 +55,7 @@ if ($result_kolicina->num_rows > 0) {
 
                             <div class="form-group mt-3">
                                 <label for="lokacija">Lokacija:</label>
-                                <input type="text" class="form-control" id="lokacija" name="lokacija" placeholder="Unesite ID lokaciju" style="padding:6px 12px;">
+                                <input type="text" class="form-control" id="lokacija" name="lokacija" placeholder="Unesite lokaciju" style="padding:6px 12px;">
                             </div>
                         </div>
                         <div class="form-group d-flex justify-content-center align-items-center">
