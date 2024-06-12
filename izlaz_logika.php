@@ -40,16 +40,16 @@ $kolicina = $_POST['kolicina'];
         $row_premjestanje = $result_premjestanje->fetch_assoc();
         $kutija = $row_premjestanje['id_kutije'];
 
-        $sql_kutije = "UPDATE kutije SET kolicina = kolicina - 1 WHERE id = '$kutija'";
+        $sql_kutije = "UPDATE kutije SET kolicina = kolicina - $kolicina WHERE id = '$kutija'";
         if ($mysqli->query($sql_kutije) !== TRUE) {
         }
 
         if ($kolicina_premjestanje > $kolicina) {
-            $sql_premjestanje = "UPDATE premjestanje SET kolicina = kolicina - '$kolicina' WHERE id_produkta = '$id_dijela'";
+            $sql_premjestanje = "UPDATE premjestanje SET kolicina = kolicina - '$kolicina' WHERE id_produkta = '$id_dijela' AND kolicina = '$kolicina_premjestanje' LIMIT 1";
             if ($mysqli->query($sql_premjestanje) !== TRUE) {
             }
         } else if ($kolicina_premjestanje == $kolicina){
-            $sql_premjestanje = "DELETE FROM premjestanje WHERE id_produkta = '$id_dijela' AND kolicina >= '$kolicina' LIMIT 1";
+            $sql_premjestanje = "DELETE FROM premjestanje WHERE id_produkta = '$id_dijela' AND kolicina = '$kolicina_premjestanje' LIMIT 1";
             if ($mysqli->query($sql_premjestanje) !== TRUE) {
             }
         }
@@ -58,6 +58,10 @@ $kolicina = $_POST['kolicina'];
     $sql_other_table = "INSERT INTO historija (korisnik, akcija) VALUES ('$user_ime', 'Izlaz dijela: $ime_artikla - $korisnik_ime - $lokacija')";
     if ($mysqli->query($sql_other_table) !== TRUE) {
     }
+
+    $sql_delete = "DELETE FROM premjestanje WHERE kolicina = 0";
+    if ($mysqli->query($sql_delete) !== TRUE) {
+    } 
 
     header("Location: izlazrobe.php");
 }

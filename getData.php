@@ -1,7 +1,7 @@
 <?php 
 include 'conn.php';
 
-$sql = "SELECT ime_produkta AS ime_artikla, COUNT(*) as total_quantity 
+$sql = "SELECT ime_produkta AS ime_artikla, SUM(kolicina) as total_quantity 
 FROM narudzbe 
 GROUP BY ime_produkta
 ORDER BY total_quantity DESC 
