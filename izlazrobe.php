@@ -21,7 +21,7 @@
                                 <option value="">Odaberite opciju</option>
                                 <?php 
                                     include 'conn.php';
-                                    $sql = "SELECT id_produkta, kolicina, id_kutije FROM premjestanje";
+                                    $sql = "SELECT id,id_produkta, kolicina, id_kutije FROM premjestanje";
                                     $result = $mysqli->query($sql);
                                     while ($row = $result->fetch_assoc()) {
                                         $zalihe = $row['kolicina'];
@@ -31,7 +31,7 @@
                                         $ime = $result_ime->fetch_assoc()['ime_artikla'];
 
                                         if ($zalihe > 0) {
-                                            echo "<option value='" . $row['id_produkta'] . "' data-zalihe='" . $zalihe . "'>ID kutije: " . $row['id_kutije'] . " | " . $ime . " (" . $zalihe . ") </option>";
+                                            echo "<option value='" . $row['id'] . "' data-zalihe='" . $zalihe . "'>ID kutije: " . $row['id_kutije'] . " | " . $ime . " (" . $zalihe . ") </option>";
                                         }
                                     }
                                 ?>

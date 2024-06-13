@@ -1,8 +1,13 @@
 <?php
 session_start();
 include "conn.php";
-$id_dijela=$_POST['idDijela'];
+$id=$_POST['idDijela'];
 $kolicina = $_POST['zaliheInput'];
+
+$sql_art = "SELECT * FROM premjestanje WHERE id = '$id'";
+$result_art = $mysqli->query($sql_art);
+$row_art = $result_art->fetch_assoc();
+$id_dijela = $row_art['id_produkta'];
 
 $sql_kolicina = "SELECT * FROM artikli WHERE id = '$id_dijela'";
 $result_kolicina = $mysqli->query($sql_kolicina);
@@ -31,7 +36,7 @@ if ($result_kolicina->num_rows > 0) {
                     <form method="POST" enctype="multipart/form-data" action="izlaz_logika.php">
                         <div class="form-group">
                             <label for="idDijela">ID dijela:</label>
-                            <input type="text" class="form-control" id="idDijela" name="idDijela" value="<?php echo $id_dijela;?>" placeholder="Unesite ID dijela" style="padding:6px 12px;">
+                            <input type="text" class="form-control" id="idDijela" name="idDijela" value="<?php echo $id;?>" placeholder="Unesite ID dijela" style="padding:6px 12px;">
                         </div>
                             <div class="form-group mt-3">
                                 <label for="lokacija">Kolicina:</label>

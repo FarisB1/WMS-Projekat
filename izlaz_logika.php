@@ -5,10 +5,15 @@ include "conn.php";
 $korisnik = $_SESSION["user_id"];
 
 if (isset($_POST['spremi'])) {
-$id_dijela=$_POST['idDijela'];
+$id=$_POST['idDijela'];
 $trazio = $_POST['trazio'];
 $lokacija =$_POST['lokacija'];
 $kolicina = $_POST['kolicina'];
+
+    $sql_art = "SELECT * FROM premjestanje WHERE id = '$id'";
+    $result_art = $mysqli->query($sql_art);
+    $row_art = $result_art->fetch_assoc();
+    $id_dijela = $row_art['id_produkta'];
 
     $sql_korisnik = "SELECT ime FROM korisnici WHERE id = '$trazio'";
     $result_korisnik = $mysqli->query($sql_korisnik);
@@ -35,7 +40,7 @@ $kolicina = $_POST['kolicina'];
     if ($mysqli->query($sql) !== TRUE) {
     } else
     {
-        $sql_premjestanje = "SELECT * FROM premjestanje WHERE id_produkta = '$id_dijela'";
+        $sql_premjestanje = "SELECT * FROM premjestanje WHERE id = '$id'";
         $result_premjestanje = $mysqli->query($sql_premjestanje);
         $row_premjestanje = $result_premjestanje->fetch_assoc();
         $kutija = $row_premjestanje['id_kutije'];
@@ -45,11 +50,11 @@ $kolicina = $_POST['kolicina'];
         }
 
         if ($kolicina_premjestanje > $kolicina) {
-            $sql_premjestanje = "UPDATE premjestanje SET kolicina = kolicina - '$kolicina' WHERE id_produkta = '$id_dijela' AND kolicina = '$kolicina_premjestanje' LIMIT 1";
+            $sql_premjestanje = "UPDATE premjestanje SET kolicina = kolicina - '$kolicina' WHERE id = '$id'";
             if ($mysqli->query($sql_premjestanje) !== TRUE) {
             }
         } else if ($kolicina_premjestanje == $kolicina){
-            $sql_premjestanje = "DELETE FROM premjestanje WHERE id_produkta = '$id_dijela' AND kolicina = '$kolicina_premjestanje' LIMIT 1";
+            $sql_premjestanje = "DELETE FROM premjestanje WHERE id = '$id'";
             if ($mysqli->query($sql_premjestanje) !== TRUE) {
             }
         }
